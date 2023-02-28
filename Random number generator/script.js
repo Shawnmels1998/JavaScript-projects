@@ -4,7 +4,7 @@ const btn = document.querySelector('.generate');
 btn.addEventListener("click", generateNumber);
 
 function generateNumber() {
-    const randomNumber = Math.floor(Math.random() * 10 + 1);
+    const randomNumber = Math.floor(Math.random() * 100 + 1);
     // console.log(randomNumber);
     number.innerHTML = randomNumber;
 }
