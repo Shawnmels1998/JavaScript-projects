@@ -4,7 +4,7 @@ const btn = document.querySelector(".generate");
 btn.addEventListener("click", generateColor);
 
 function generateColor() {
-    const randomColor = Math.random().toString(16).slice(2,8);
+    const randomColor = Math.floor(Math.random()*16777215).toString(16);
     // console.log(randomColor);
     document.body.style.backgroundColor = "#" + randomColor;
     hex.innerHTML = "#" + randomColor;
