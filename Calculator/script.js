@@ -1,31 +1,24 @@
-const keys = document.getElementsByTagName("li");
+const keys = Array.from(document.getElementsByTagName("li"));
 const result = document.querySelector("p");
 const clear = document.querySelector(".clear");
 
-for(let i = 0; i < keys.length; i++) {
-    if(keys[i].innerHTML === "=") {
-        keys[i].addEventListener("click", calculate);
+keys.forEach(key => {
+  key.addEventListener("click", () => {
+    const value = key.innerHTML;
+    if (value === "=") {
+      calculate();
+    } else if (value === "/" || value === "*") {
+      result.innerHTML += value;
     } else {
-        keys[i].addEventListener("click", addToCurrentValue(i));
+      result.innerHTML += value;
     }
-}
-
-function addToCurrentValue(i) {
-    return () => {
-        if (keys[i].innerHTML === "/") {
-            result.innerHTML += "/";
-        } else if (keys[i].innerHTML === "*") {
-            result.innerHTML += "*";
-        } else {
-            result.innerHTML += keys[i].innerHTML;
-        }
-    }
-}
+  });
+});
 
 function calculate() {
-    return(result.innerHTML = eval(result.innerHTML));
+  result.innerHTML = eval(result.innerHTML);
 }
 
 clear.addEventListener("click", () => {
-    result.innerHTML = "";
-})
+  result.innerHTML = "";
+});
