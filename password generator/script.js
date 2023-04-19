@@ -14,35 +14,35 @@ const password = document.getElementById("password");
 const copy = document.getElementById("copy");
 
 submit.addEventListener("click", () => {
-    let initialPassword = empty;
-    //add character if option is clicked
+  let initialPassword = empty;
+  // add character if option is clicked
 
-    upperCase.checked? (initialPassword += uCase) : "";
-    lowerCase.checked? (initialPassword += lCase) : "";
-    pNumber.checked? (initialPassword += number) : "";
-    pSymbol.checked? (initialPassword += symbol) : "";
+  upperCase.checked ? (initialPassword += uCase) : "";
+  lowerCase.checked ? (initialPassword += lCase) : "";
+  pNumber.checked ? (initialPassword += number) : "";
+  pSymbol.checked ? (initialPassword += symbol) : "";
 
-    password.value = generatePassword(pLength.value, initialPassword);
-})
+  password.value = generatePassword(pLength.value, initialPassword);
+});
 
-function generatePassword(l, initialPassword) {
-    let pass = "";
-    for (let i = 0; i < l; i++) {
-        pass += initialPassword.charAt(
-            Math.floor(Math.random() * initialPassword.length)
-        )
-    }
-    return pass;
-}
+const generatePassword = (l, initialPassword) => {
+  let pass = "";
+  for (let i = 0; i < l; i++) {
+    pass += initialPassword.charAt(
+      Math.floor(Math.random() * initialPassword.length)
+    );
+  }
+  return pass;
+};
 
 // copy function
 
 copy.addEventListener("click", () => {
-    if (password.value == "") {
-        alert("Please generate password");
-    } else {
-        password.select();
-        document.execCommand("copy");
-        alert("Password copied to clipboard");
-    }
-})
+  if (password.value === "") {
+    alert("Please generate password");
+  } else {
+    password.select();
+    document.execCommand("copy");
+    alert("Password copied to clipboard");
+  }
+});
