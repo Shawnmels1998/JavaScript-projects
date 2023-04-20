@@ -11,30 +11,41 @@
 // fah = (x - 273.15) * 1.8 + 32;
 // celsius = parseFloat(x) - 273.15;
 
-const celsius = document.querySelector(".celsius");
-const fah = document.querySelector(".fahrenheit");
-const kelvin = document.querySelector(".kelvin");
+const temperatureInputs = document.querySelectorAll(".temperature-input");
 const form = document.querySelector("form");
 
 form.addEventListener("input", convertTemp);
 
 function convertTemp(e) {
-    if(e.target.classList.contains("celsius")) {
-        let x = e.target.value;
-        fah.value = (x * 1.8) + 32;
-        kelvin.value = x + 273.15;
-    }
+  const inputValue = parseFloat(e.target.value);
+  const inputUnit = e.target.dataset.unit;
 
-    if(e.target.classList.contains("fahrenheit")) {
-        let x = e.target.value;
-        celsius.value = (x - 32) / 1.8;
-        kelvin.value = (x - 32) / 1.8 + 273.15;
-
-    }
-
-    if(e.target.classList.contains("kelvin")) {
-        let x = e.target.value;
-        fah.value = (x - 273.15) * 1.8 + 32;
-        celsius.value = parseFloat(x) - 273.15;
-    }
+  if (inputUnit === "celsius") {
+    temperatureInputs.forEach((input) => {
+      const unit = input.dataset.unit;
+      if (unit === "fahrenheit") {
+        input.value = (inputValue * 1.8) + 32;
+      } else if (unit === "kelvin") {
+        input.value = inputValue + 273.15;
+      }
+    });
+  } else if (inputUnit === "fahrenheit") {
+    temperatureInputs.forEach((input) => {
+      const unit = input.dataset.unit;
+      if (unit === "celsius") {
+        input.value = (inputValue - 32) / 1.8;
+      } else if (unit === "kelvin") {
+        input.value = (inputValue - 32) / 1.8 + 273.15;
+      }
+    });
+  } else if (inputUnit === "kelvin") {
+    temperatureInputs.forEach((input) => {
+      const unit = input.dataset.unit;
+      if (unit === "celsius") {
+        input.value = inputValue - 273.15;
+      } else if (unit === "fahrenheit") {
+        input.value = (inputValue - 273.15) * 1.8 + 32;
+      }
+    });
+  }
 }
