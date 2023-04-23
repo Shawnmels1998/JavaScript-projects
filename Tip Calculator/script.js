@@ -1,33 +1,38 @@
-const btn = document.querySelector(".btn");
-const error = document.querySelector(".error");
-const tip = document.querySelector(".tip");
-const total = document.querySelector(".total");
+const elements = {
+  btn: document.querySelector(".btn"),
+  error: document.querySelector(".error"),
+  tip: document.querySelector(".tip"),
+  total: document.querySelector(".total"),
+  bill: document.querySelector(".bill"),
+  rate: document.querySelector(".rate"),
+};
 
 const hideError = () => {
-    setTimeout(() => {
-        error.style.display = "none";
-    }, 3000);
-}
+  setTimeout(() => {
+    elements.error.style.display = "none";
+  }, 3000);
+};
+
+const showError = (message) => {
+  elements.error.innerHTML = message;
+  elements.error.style.display = "block";
+  hideError();
+};
 
 const calculateTip = () => {
-    const bill = document.querySelector(".bill").value;
-    const rate = document.querySelector(".rate").value;
+  const { bill, rate } = elements;
 
-    if (bill === "" || rate == "") {
-        error.style.display = "block";
-        hideError();
-    } else if (isNaN(bill)) {
-        error.innerHTML = "please enter a number";
-        error.style.display = "block";
-        hideError();
-    } else {
-        let tipAmount = bill * rate;
-         tipAmount = Math.ceil(tipAmount);
-        tip.innerHTML =`Tip amount: $${tipAmount}`;
+  if (!bill.value || !rate.value) {
+    showError("Please enter the bill amount and tip rate.");
+  } else if (isNaN(bill.value)) {
+    showError("Please enter a valid number for the bill amount.");
+  } else {
+    const tipAmount = Math.ceil(bill.value * rate.value);
+    const totalBill = Number(bill.value) + tipAmount;
 
-        let totalBill = Number(bill) + tipAmount;
-        total.innerHTML = `Total amount: $${totalBill}`;
-        }
-}
+    elements.tip.innerHTML = `Tip amount: $${tipAmount}`;
+    elements.total.innerHTML = `Total amount: $${totalBill}`;
+  }
+};
 
-btn.addEventListener("click", calculateTip);
+elements.btn.addEventListener("click", calculateTip);
