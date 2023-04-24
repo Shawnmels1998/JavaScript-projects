@@ -1,32 +1,31 @@
-let time = 15; //time in minutes
-let promoTime = time * 60;
-
-let counting = document.getElementById("countdown");
+const PROMO_DURATION_IN_MINUTES = 15;
+const PROMO_DURATION_IN_SECONDS = PROMO_DURATION_IN_MINUTES * 60;
+const countdownElement = document.getElementById("countdown");
 
 function startCountdown() {
-    let promoTimer = setInterval(() => {
-        if (promoTime <= 0) {
-            clearInterval(promoTime);
-            counting.innerHTML = "promo has ended";
+    let remainingTimeInSeconds = PROMO_DURATION_IN_SECONDS;
+
+    const countdownInterval = setInterval(() => {
+        remainingTimeInSeconds--;
+
+        if (remainingTimeInSeconds <= 0) {
+            clearInterval(countdownInterval);
+            countdownElement.textContent = "Promotion has ended";
         } else {
-            promoTime--;
+            const remainingTimeInMinutes = Math.floor(remainingTimeInSeconds / 60);
+            const remainingTimeInSecondsFormatted = format(remainingTimeInSeconds % 60);
 
-            const days = Math.floor(promoTime / 3600 / 24);
-            const hours = Math.floor(promoTime / 3600)  % 24;
-            const min = Math.floor(promoTime / 60) % 60;
-            const sec = Math.floor(promoTime % 60);
-
-            counting.innerHTML = `TIME: ${hours}hr : ${format(min)}min : ${format(sec)}s`;
+            countdownElement.textContent = `TIME: ${remainingTimeInMinutes}min : ${remainingTimeInSecondsFormatted}s`;
         }
-
     }, 1000);
 }
 
-function format(t) {
-    return t < 10 ? `0${t}` : t;
+function format(time) {
+    return time < 10 ? `0${time}` : time;
 }
 
 startCountdown();
+
 
 
 
