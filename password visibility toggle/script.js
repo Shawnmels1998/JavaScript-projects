@@ -1,14 +1,12 @@
-const password = document.querySelector("#password");
-const eyeIcon = document.querySelector("#eye");
+const passwordInput = document.querySelector("#password");
+const togglePasswordBtn = document.querySelector("#eye");
 
-eyeIcon.addEventListener("click", () => {
-  if (eyeIcon.classList.contains("fa-eye")) {
-    password.setAttribute("type", "text");
-    // eyeIcon.classList.remove("fa-eye");
-    // eyeIcon.classList.add("fa-eye-slash");
-    eyeIcon.classList.replace("fa-eye", "fa-eye-slash");
-  } else {
-    password.setAttribute("type", "password");
-    eyeIcon.classList.replace("fa-eye-slash", "fa-eye");
-  }
-});
+function togglePasswordVisibility() {
+  const isPasswordVisible = passwordInput.type === "text";
+  passwordInput.type = isPasswordVisible ? "password" : "text";
+  const eyeIconClassToReplace = isPasswordVisible ? "fa-eye-slash" : "fa-eye";
+  const eyeIconClassToReplaceWith = isPasswordVisible ? "fa-eye" : "fa-eye-slash";
+  togglePasswordBtn.classList.replace(eyeIconClassToReplace, eyeIconClassToReplaceWith);
+}
+
+togglePasswordBtn.addEventListener("click", togglePasswordVisibility);
