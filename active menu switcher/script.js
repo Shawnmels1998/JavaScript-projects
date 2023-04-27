@@ -1,10 +1,12 @@
 const navList = document.querySelector(".nav-list");
+const links = navList.querySelectorAll(".link");
 
-navList.addEventListener("click", (e) => {
-    const navLink = e.target.parentElement;
+navList.addEventListener("click", (event) => {
+  const target = event.target;
+  const navLink = target.closest(".link");
 
-    if (navLink.classList.contains("link")) {
-        navList.querySelector(".active").classList.remove("active");
-        navLink.classList.add("active");
-    }
-})
+  if (navLink && links.includes(navLink)) {
+    links.forEach((link) => link.classList.remove("active"));
+    navLink.classList.add("active");
+  }
+});
