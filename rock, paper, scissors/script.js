@@ -1,50 +1,43 @@
 const playerText = document.querySelector('#playerText');
 const computerText = document.querySelector('#computerText');
 const resultText = document.querySelector('#resultText');
-const choiceBtn = document.querySelectorAll('.choiceBtn');
+const choiceBtns = document.querySelectorAll('.choiceBtn');
 
 let player;
 let computer;
 let result;
 
-choiceBtn.forEach(button => button.addEventListener("click", () => {
-    // console.log("it works hoooray!!!!!!");
-
-    player = button.textContent;
-    computerTurn();
-    playerText.textContent = `Player: ${player}`;
-    computerText.textContent = `computer: ${computer}`;
-    resultText.textContent = checkWinner();
-}))
-
 function computerTurn() {
-    const randChoice = Math.floor(Math.random() * 3) + 1;
-    // console.log(randChoice);
+  const choices = ["ROCK", "PAPER", "SCISSORS"];
+  const randomIndex = Math.floor(Math.random() * choices.length);
+  return choices[randomIndex];
+}
 
-    switch(randChoice) {
-        case 1:
-            computer = "ROCK";
-            break;
-        case 2:
-            computer = "PAPER";
-            break;
-        case 3:
-            computer = "SCISSORS";
-            break;
-    }
+function playRound(playerChoice) {
+  player = playerChoice;
+  computer = computerTurn();
+  playerText.textContent = `Player: ${player}`;
+  computerText.textContent = `Computer: ${computer}`;
+  result = checkWinner();
+  resultText.textContent = result;
 }
 
 function checkWinner() {
-    if(player == computer) {
-        return "Draw!";
-    }
-    else if(computer == "ROCK") {
-        return (player == "PAPER")? "You win 🎉": "You lose 😑✌️";
-    }
-    else if(computer == "PAPER") {
-        return (player == "SCISSORS")? "You win 🎉": "You lose 😑✌️";
-    }
-    else if(computer == "SCISSORS") {
-        return (player == "ROCK")? "You win 🎉": "You lose 😑✌️";
-    }
+  if (player === computer) {
+    return "Draw!";
+  } else if (
+    (player === "ROCK" && computer === "SCISSORS") ||
+    (player === "PAPER" && computer === "ROCK") ||
+    (player === "SCISSORS" && computer === "PAPER")
+  ) {
+    return "You win 🎉";
+  } else {
+    return "You lose 😑✌️";
+  }
 }
+
+choiceBtns.forEach((button) => {
+  button.addEventListener("click", () => {
+    playRound(button.textContent);
+  });
+});
