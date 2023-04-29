@@ -1,104 +1,68 @@
-let state,
-password = document.getElementById("password"),
-passwordStrength = document.getElementById("password-strength"),
-lowUpperCase = document.querySelector(".low-upper-case i"),
-number = document.querySelector(".number i "),
-specialChar = document.querySelector(".special-char i "),
-eightChar = document.querySelector(".eight-char i"),
-showPassword = document.querySelector(".show-pass"),
-eyeIcon = document.querySelector("#eye");
+const password = document.getElementById("password");
+const passwordStrength = document.getElementById("password-strength");
+const criteria = {
+  lowUpperCase: document.querySelector(".low-upper-case i"),
+  number: document.querySelector(".number i "),
+  specialChar: document.querySelector(".special-char i "),
+  eightChar: document.querySelector(".eight-char i")
+};
+const showPassword = document.querySelector(".show-pass");
+const eyeIcon = document.querySelector("#eye");
 
+let state = false;
 
- showPassword.addEventListener("click", toggle);
- eyeIcon.addEventListener("click", toggleEye);
- password.addEventListener("keyup", () => {
-  let pass = password.value;
-  checkStrength(pass);
- });
+showPassword.addEventListener("click", togglePassword);
+eyeIcon.addEventListener("click", toggleEyeIcon);
+password.addEventListener("keyup", () => checkPasswordStrength(password.value));
 
-// toggle password visibility
- function toggle() {
-  if(state) {
-     password.setAttribute("type", "password");
-     state = false;
-  } else {
-    password.setAttribute("type", "text");
-    state = true;
-  }
- }
+function togglePassword() {
+  state = !state;
+  password.setAttribute("type", state ? "text" : "password");
+}
 
-//  toggle icon in password field
- function toggleEye() {
-    eyeIcon.classList.toggle("fa-eye-slash");
- }
+function toggleEyeIcon() {
+  eyeIcon.classList.toggle("fa-eye-slash");
+}
 
- // check password strength
- function checkStrength(password) {
+function checkPasswordStrength(password) {
   let strength = 0;
 
-//check lower and uppercase
-  if(password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) {
-      strength +=1;
-      addCheck(lowUpperCase);
-  } else {
-    removeCheck(lowUpperCase);
+  for (const [key, value] of Object.entries(criteria)) {
+    if (password.match(getCriteriaRegex(key))) {
+      strength++;
+      addCheck(value);
+    } else {
+      removeCheck(value);
+    }
   }
 
-  //Check for numbers
-  if(password.match(/([0-9])/)) {
-    strength +=1;
-    addCheck(number);
-} else {
-  removeCheck(number);
+  passwordStrength.style.width = `${strength * 25}%`;
+  passwordStrength.className = `progress-bar ${
+    strength === 4 ? "bg-success" : strength === 3 ? "bg-primary" : strength === 2 ? "bg-warning" : "bg-danger"
+  }`;
 }
 
-// check for special characters
-   if(password.match(/([!,%,&,@,#,$,^,*,?,_,~])/)) {
-      strength +=1;
-       addCheck(specialChar);
-   } else {
-      removeCheck(specialChar);
-}
-
-// check contains 8 characters
-if(password.length > 7) {
-  strength +=1;
-   addCheck(eightChar);
-} else {
-  removeCheck(eightChar);
-}
-
-
-//Update progress bar
-  if(strength == 1) {
-    passwordStrength.classList.remove("pb-warning", "pb-primary", "pb-success");
-    passwordStrength.classList.add("pb-danger");
-    passwordStrength.style = "width: 25%";
-  } else if(strength == 2) {
-    passwordStrength.classList.remove("pb-danger","pb-primary", "pb-success");
-    passwordStrength.classList.add("pb-warning");
-    passwordStrength.style = "width: 50%";
-  } else if(strength == 3) {
-    passwordStrength.classList.remove("pb-danger", "pb-warning","pb-success");
-    passwordStrength.classList.add("pb-primary");
-    passwordStrength.style = "width: 75%";
-  } else if(strength == 4) {
-    passwordStrength.classList.remove("pb-danger", "pb-warning", "pb-primary");
-    passwordStrength.classList.add("pb-success");
-    passwordStrength.style = "width: 100%";
+function getCriteriaRegex(criteriaName) {
+  switch (criteriaName) {
+    case "lowUpperCase":
+      return /([a-z].*[A-Z])|([A-Z].*[a-z])/;
+    case "number":
+      return /([0-9])/;
+    case "specialChar":
+      return /([!,%,&,@,#,$,^,*,?,_,~])/;
+    case "eightChar":
+      return /^.{8,}$/;
+    default:
+      throw new Error(`Invalid criteria: ${criteriaName}`);
   }
- } 
+}
 
- //Add check icon
- function addCheck(charRequired) {
+function addCheck(charRequired) {
   charRequired.classList.remove("fa-circle");
   charRequired.classList.add("fa-check");
- }
+}
 
- // remove check icon
- function removeCheck(charRequired) {
+function removeCheck(charRequired) {
   charRequired.classList.remove("fa-check");
   charRequired.classList.add("fa-circle");
- }
-
-
+}
