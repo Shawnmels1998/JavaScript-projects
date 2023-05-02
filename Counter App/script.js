@@ -1,64 +1,43 @@
+const count = document.querySelector(".count");
+const buttons = document.querySelector(".buttons");
 
-// const add = document.querySelector(".add");
-// const resetCount = document.querySelector(".reset");
-// const sub = document.querySelector(".subtract");
- const count = document.querySelector(".count");
- const buttons = document.querySelector(".buttons");
+buttons.addEventListener("click", handleButtonClick);
 
- buttons.addEventListener("click", (e) => {
-     if(e.target.classList.contains("add")) {
-         count.innerHTML++;
-         setColor();
-     }
+function handleButtonClick(e) {
+  const buttonClicked = e.target;
+  const action = buttonClicked.dataset.action;
 
-     if(e.target.classList.contains("reset")) {
-        count.innerHTML = 0;
-        setColor();
-    }
+  if (!action) {
+    return;
+  }
 
-    if(e.target.classList.contains("subtract")) {
-        count.innerHTML--;
-        setColor();
-    }
- })
+  const currentCount = parseInt(count.textContent);
+  const newCount = calculateNewCount(action, currentCount);
+  updateCountDisplay(newCount);
+  setColor(newCount);
+}
 
- function setColor() {
-     if(count.innerHTML > 0) {
-         count.style.color = "yellow";
-     } else if(count.innerHTML < 0) {
-        count.style.color = "red";
-     }
-     else {
-        count.style.color = "white";
-     }
- }
+function calculateNewCount(action, currentCount) {
+  if (action === "add") {
+    return currentCount + 1;
+  } else if (action === "subtract") {
+    return currentCount - 1;
+  } else {
+    return 0;
+  }
+}
 
-// add.addEventListener("click", () => {
-//     count.innerHTML++;
-// })
+function updateCountDisplay(newCount) {
+  count.textContent = newCount;
+}
 
-// sub.addEventListener("click", () => {
-//     count.innerHTML--;
-// })
+function setColor(newCount) {
+  if (newCount > 0) {
+    count.style.color = "yellow";
+  } else if (newCount < 0) {
+    count.style.color = "red";
+  } else {
+    count.style.color = "white";
+  }
+}
 
-// resetCount.addEventListener("click", () => {
-//     count.innerHTML = 0;
-// })
-
-
-// let companies = `[
-//     {
-//         "name": "big company",
-//         "numberOfEmployees": 10000,
-//         "ceo": "mary",
-//         "rating": 4.2
-//     },
-//     {
-//         "name": "startup",
-//         "numberOfEmployees": 5,
-//         "ceo": null,
-//         "rating": 4.8
-//     }
-// ]`;
-
-// console.log(JSON.parse(companies));
