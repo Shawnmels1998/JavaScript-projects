@@ -1,24 +1,23 @@
-const countTo = "18 Feb 2022";
+const countTo = new Date("18 Feb 2022").getTime();
 
-const c = setInterval(() => {
-    const endDate = new Date(countTo);
-    const currentDate = new Date();
-    const totalSeconds = (endDate - currentDate) / 1000;
+const countdown = setInterval(() => {
+  const currentDate = new Date().getTime();
+  const totalSeconds = Math.floor((countTo - currentDate) / 1000);
 
-    const days = Math.floor(totalSeconds / 3600 / 24);
-    const hours = Math.floor(totalSeconds /3600) % 24;
-    const minutes = Math.floor(totalSeconds /60) % 60;
-    const seconds = Math.floor(totalSeconds) % 60;
+  if (totalSeconds < 0) {
+    clearInterval(countdown);
+    document.getElementById("countdown").textContent = "Happy Birthday to me";
+    return;
+  }
 
-    const countDown = document.getElementById("countdown");
-    countDown.textContent = `${days}Days ${format(hours)}Hrs : ${format(minutes)}min : ${format(seconds)}s`;
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
 
-    if (totalSeconds < 0) {
-        clearInterval(c);
-        countDown.textContent = "Happy Birthday to me";
-    }
-}, 1000)
+  document.getElementById("countdown").textContent = `${days} Days ${format(hours)} Hrs : ${format(minutes)} Min : ${format(seconds)} Sec`;
+}, 1000);
 
-function format(t) {
-    return t < 10? `0${t}` : t;
+function format(time) {
+  return time < 10 ? `0${time}` : time;
 }
