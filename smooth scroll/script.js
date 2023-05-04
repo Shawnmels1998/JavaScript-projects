@@ -1,14 +1,10 @@
 const links = document.querySelectorAll(".nav-list li a");
-
-for (link of links) {
-    link.addEventListener("click", smoothScroll);
-}
-
-function smoothScroll (e) {
+links.forEach(link => {
+  link.addEventListener("click", e => {
     e.preventDefault();
-
-    const href = this.getAttribute("href");
+    const href = link.getAttribute("href");
     document.querySelector(href).scrollIntoView({
-        behaviour: "smooth",
+      behavior: "smooth",
     });
-}
+  });
+});
