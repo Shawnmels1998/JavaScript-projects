@@ -1,15 +1,12 @@
 const input = document.getElementById("search");
-input.addEventListener("keyup", search);
+input.addEventListener("input", search);
 
 function search() {
-    const inputValue = input.value;
-    const li = document.getElementsByTagName("li");
+  const inputValue = input.value.trim().toLowerCase();
+  const lis = document.querySelectorAll("li");
 
-    for(i = 0; i < li.length; i++) {
-        if(li[i].innerHTML.toLowerCase().includes(inputValue)) {
-            li[i].style.display = "";
-        } else {
-            li[i].style.display = "none";
-        }
-    }
+  lis.forEach(li => {
+    const text = li.textContent.trim().toLowerCase();
+    li.style.display = text.includes(inputValue) ? "" : "none";
+  });
 }
