@@ -1,46 +1,38 @@
-const cardNumber = document.querySelector("#number");
-const cardValidity = document.querySelector("#valid");
-const cardCvv = document.querySelector("#cvv");
+const cardNumberInput = document.querySelector("#number");
+const cardValidityInput = document.querySelector("#valid");
+const cardCvvInput = document.querySelector("#cvv");
 
-cardNumber.addEventListener("input", formatCardNumber);
-cardValidity.addEventListener("input", formatCardValidity);
-cardCvv.addEventListener("input", formatCvv);
+cardNumberInput.addEventListener("input", formatCardNumberInput);
+cardValidityInput.addEventListener("input", formatCardValidityInput);
+cardCvvInput.addEventListener("input", formatCvvInput);
 
-function formatCardNumber(e) {
-  cardNumber.maxLength = "19";
-  e.target.value = e.target.value
+function formatCardNumberInput() {
+  const cardNumberValue = cardNumberInput.value
     .replace(/[^\dA-Z]/g, "")
     .replace(/[^\da-z]/g, "")
     .replace(/(.{4})/g, "$1 ")
     .trim();
-  if (cardNumber.value.length == 19) {
-    formatCardValidity();
+  cardNumberInput.value = cardNumberValue.slice(0, 19);
+  formatCardValidityInput();
+}
+
+function formatCardValidityInput() {
+  const cardValidityValue = cardValidityInput.value
+    .replace(/[^\dA-Z]/g, "")
+    .replace(/[^\da-z]/g, "")
+    .replace(/(.{2})/g, "$1/")
+    .trim();
+  cardValidityInput.value = cardValidityValue.slice(0, 5);
+  if (cardValidityValue.length === 5) {
+    formatCvvInput();
   }
 }
 
-// Format Validity
-function formatCardValidity(e) {
-  cardValidity.focus();
-  cardValidity.maxLength = "5";
-
-  if (cardValidity.value.length < 5) {
-    cardValidity.value = cardValidity.value
-      .replace(/[^\dA-Z]/g, "")
-      .replace(/[^\da-z]/g, "")
-      .replace(/(.{2})/g, "$1/")
-      .trim();
-  }
-  if (cardValidity.value.length == 5) {
-    formatCvv();
-  }
-}
-
-// Format CVV
-function formatCvv() {
-  cardCvv.focus();
-  cardCvv.maxLength = "3";
-  cardCvv.value = cardCvv.value
+function formatCvvInput() {
+  const cardCvvValue = cardCvvInput.value
     .replace(/[^\dA-Z]/g, "")
     .replace(/[^\da-z]/g, "")
     .trim();
+  cardCvvInput.value = cardCvvValue.slice(0, 3);
 }
+
