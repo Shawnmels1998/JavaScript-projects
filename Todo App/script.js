@@ -3,35 +3,35 @@ const btn = document.querySelector("button");
 const todoList = document.querySelector(".todo-list");
 const clear = document.querySelector(".clear");
 
-const addTask = (e) => {
-     e.preventDefault();
-    const newLi = document.createElement("li");
-    const delBtn = document.createElement("button");
+function addTask(e) {
+    e.preventDefault();
 
-    delBtn.innerHTML = '<i class="fas fa-trash-alt">';
-
-    if(input.value !== "") {
-        newLi.textContent = input.value;
-        newLi.appendChild(delBtn);
-        todoList.appendChild(newLi);
-        input.value = "";
-    } else {
+    const task = input.value.trim();
+    if (task === "") {
         alert("Please enter a task!");
+        return;
     }
 
-    //delete function
+    const newLi = document.createElement("li");
+    newLi.textContent = task;
 
+    const delBtn = document.createElement("button");
+    delBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
     delBtn.addEventListener("click", function() {
-        const del = confirm("Are you sure you want to delete this Task!!!");
-
-        if(del == true) {
-            const parent = this.parentNode;
-            parent.remove();
+        const del = confirm("Are you sure you want to delete this task?");
+        if (del) {
+            this.parentNode.remove();
         }
-    })
+    });
+    newLi.appendChild(delBtn);
+
+    todoList.appendChild(newLi);
+    input.value = "";
+}
+
+function clearTasks() {
+    todoList.innerHTML = "";
 }
 
 btn.addEventListener("click", addTask);
-clear.addEventListener("click", () => {
-    todoList.innerHTML = "";
-})
+clear.addEventListener("click", clearTasks);
