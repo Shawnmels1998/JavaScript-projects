@@ -1,70 +1,42 @@
 const btn = document.querySelector(".get-quotes");
-btn.addEventListener("click", getQuotes);
-const number = document.getElementById("number");
+const numberInput = document.getElementById("number");
+const quotesContainer = document.querySelector(".quotes");
 
+btn.addEventListener("click", handleGetQuotesClick);
 
-function getQuotes(e) {
-    e.preventDefault();
+function handleGetQuotesClick(event) {
+  event.preventDefault();
 
-    if (number.value.length === 0) {
-        return alert("Please enter a number");
+  const numberOfQuotes = Number(numberInput.value);
 
-    } else {
-        const https = new XMLHttpRequest();
+  if (!numberOfQuotes) {
+    alert("Please enter a valid number");
+    return;
+  }
 
-    https.open("GET", "https://type.fit/api/quotes", true);
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://type.fit/api/quotes", true);
+  xhr.onload = () => {
+    if (xhr.status === 200) {
+      const quotes = JSON.parse(xhr.responseText);
+      const randomQuotes = getRandomQuotes(quotes, numberOfQuotes);
+      const quotesHtml = randomQuotes
+        .map(quote => `
+          <li>
+            <b>Quote</b>: ${quote.text}<br>
+            <b>Author</b>: ${quote.author}
+          </li>
+          <hr>
+        `)
+        .join('');
 
-    https.onload = function() {
-        if(this.status === 200) {
-            // console.log(this.responseText);
-
-            const response = randomQuote(JSON.parse(this.responseText));
-
-            let output = "";
-            // response.forEach(function(quote) {
-            //     output += `
-            //     <li>Quote: ${quote.text}</li>
-            //     <li>Author: ${quote.author}</li>
-            //     <hr>
-            //     `;
-            // });
-
-            for (let i = 0; i < response.length; i++) {
-                 if (i == number.value) {break;}
-
-                output += `
-                 <li>Quote: ${response[i].text}</li>
-                 <li>Author: ${response[i].author}</li>
-                 <hr>
-                `;
-
-            }
-         document.querySelector(".quotes").innerHTML = output;
-
-        }
-
+      quotesContainer.innerHTML = quotesHtml;
     }
-
-    https.send();
-
-    }
+  };
+  xhr.send();
 }
 
-// function to get random quotes
-
-function randomQuote(quotes) {
-    let CI = quotes.length, tempValue, randomIndex;
-
-    // while elements exist in an array
-    
-    while (CI > 0) {
-        randomIndex = Math.floor(Math.random() * CI);
-
-        //decrease CI by one
-        CI--;
-        tempValue = quotes[CI];
-        quotes[CI] = quotes[randomIndex];
-        quotes[randomIndex] = tempValue;
-    }
-    return quotes;
+function getRandomQuotes(quotes, numberOfQuotes) {
+  const shuffledQuotes = quotes.sort(() => 0.5 - Math.random());
+  return shuffledQuotes.slice(0, numberOfQuotes);
 }
