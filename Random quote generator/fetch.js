@@ -1,57 +1,42 @@
 const btn = document.querySelector(".get-quotes");
-btn.addEventListener("click", getQuotes);
-const number = document.getElementById("number");
+const numberInput = document.getElementById("number");
+const quotesContainer = document.querySelector(".quotes");
 
+btn.addEventListener("click", handleGetQuotesClick);
 
-function getQuotes(e) {
-    e.preventDefault();
+function handleGetQuotesClick(event) {
+  event.preventDefault();
 
-    if (number.value.length === 0) {
-        return alert("Please enter a number");
+  const numberOfQuotes = Number(numberInput.value);
 
-    } else {
-        fetch("https://type.fit/api/quotes")
-          .then(function(response) {
-             return response.json();
-          })
+  if (!numberOfQuotes) {
+    alert("Please enter a valid number");
+    return;
+  }
 
-          .then(function(data) {
-              data = randomQuote(data);
+  fetch("https://type.fit/api/quotes")
+    .then(response => response.json())
+    .then(data => {
+      const randomQuotes = getRandomQuotes(data, numberOfQuotes);
+      const quotesHtml = randomQuotes
+        .map(quote => `
+          <li>
+            <b>Quote</b>: ${quote.text}<br>
+            <b>Author</b>: ${quote.author}
+          </li>
+          <hr>
+        `)
+        .join('');
 
-            let output = "";
-
-
-            for (let i = 0; i < data.length; i++) {
-                if (i == number.value) {break;}
-
-               output += `
-                <li><b>Quote</b>: ${data[i].text}</li>
-                <li><b>Author</b>: ${data[i].author}</li>
-                <hr>
-               `;
-           }
-
-           document.querySelector(".quotes").innerHTML = output;
-          })
-    }
+      quotesContainer.innerHTML = quotesHtml;
+    })
+    .catch(error => {
+      console.error("Error getting quotes", error);
+      alert("Error getting quotes");
+    });
 }
 
-
-// function to get random quotes
-
-function randomQuote(quotes) {
-    let CI = quotes.length, tempValue, randomIndex;
-
-    // while elements exist in an array
-    
-    while (CI > 0) {
-        randomIndex = Math.floor(Math.random() * CI);
-
-        //decrease CI by one
-        CI--;
-        tempValue = quotes[CI];
-        quotes[CI] = quotes[randomIndex];
-        quotes[randomIndex] = tempValue;
-    }
-    return quotes;
+function getRandomQuotes(quotes, numberOfQuotes) {
+  const shuffledQuotes = quotes.sort(() => 0.5 - Math.random());
+  return shuffledQuotes.slice(0, numberOfQuotes);
 }
