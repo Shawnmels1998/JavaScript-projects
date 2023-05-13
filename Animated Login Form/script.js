@@ -1,27 +1,30 @@
-const login = document.querySelector(".login-link");
-const register = document.querySelector(".register-link");
-const forgot = document.querySelector(".forgot-link");
-const close = document.querySelector(".close");
+const loginLink = document.querySelector(".login-link");
+const registerLink = document.querySelector(".register-link");
+const forgotLink = document.querySelector(".forgot-link");
+const closeLink = document.querySelector(".close");
 const loginSection = document.querySelector(".login");
 const registerSection = document.querySelector(".register");
 const forgotSection = document.querySelector(".forgot");
 
-register.addEventListener("click", () => {
-  loginSection.style.display = "none";
-  registerSection.style.display = "flex";
+function showSection(sectionToShow, sectionToHide1, sectionToHide2) {
+  sectionToShow.style.display = "flex";
+  sectionToHide1.style.display = "none";
+  sectionToHide2.style.display = "none";
+}
+
+registerLink.addEventListener("click", () => {
+  showSection(registerSection, loginSection, forgotSection);
 });
 
-login.addEventListener("click", () => {
-  registerSection.style.display = "none";
-  loginSection.style.display = "flex";
+loginLink.addEventListener("click", () => {
+  showSection(loginSection, registerSection, forgotSection);
 });
 
-forgot.addEventListener("click", () => {
-  loginSection.style.display = "none";
-  forgotSection.style.display = "flex";
+forgotLink.addEventListener("click", () => {
+  showSection(forgotSection, loginSection, registerSection);
 });
 
-close.addEventListener("click", () => {
-  forgotSection.style.display = "none";
-  loginSection.style.display = "flex";
+closeLink.addEventListener("click", () => {
+  showSection(loginSection, forgotSection, registerSection);
 });
+
