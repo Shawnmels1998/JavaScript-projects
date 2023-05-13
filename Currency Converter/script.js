@@ -1,12 +1,12 @@
 // Map - https://www.worldometers.info/geography/flags-of-the-world/
 
-const cur1 = document.querySelector(".cur-1");
-const cur2 = document.querySelector(".cur-2");
-const cur1Input = document.querySelector(".cur-1-input");
-const cur2Input = document.querySelector(".cur-2-input");
+const fromCurrency = document.querySelector(".cur-1");
+const toCurrency = document.querySelector(".cur-2");
+const fromAmount = document.querySelector(".cur-1-input");
+const toAmount = document.querySelector(".cur-2-input");
 
 const baseRate = document.querySelector(".base");
-const switchCur = document.querySelector(".switch-cur");
+const switchButton = document.querySelector(".switch-cur");
 
 const countries = [
   {
@@ -27,62 +27,60 @@ const countries = [
   },
 ];
 
-// https://v6.exchangerate-api.com/v6/YOUR-API-KEY/latest/USD
 const apiURL = "https://v6.exchangerate-api.com/v6/";
-const key = "093352694b431c8342cff984";
+const apiKey = "093352694b431c8342cff984";
 
-// Get Exchange Rate
-async function getExchangeRate() {
-  const cur1Value = cur1.value;
-  const cur2Value = cur2.value;
-
-  const response = await fetch(`${apiURL}${key}/latest/${cur1Value}`);
+async function fetchExchangeRate(baseCurrency, targetCurrency) {
+  const response = await fetch(`${apiURL}${apiKey}/latest/${baseCurrency}`);
   const data = await response.json();
-  console.log(data);
-
-  const rate = data.conversion_rates[cur2Value];
-
-  baseRate.textContent = `1 ${cur1Value} = ${rate.toFixed(2)} ${cur2Value}`;
-
-  cur2Input.value = (cur1Input.value * rate).toFixed(2);
+  return data.conversion_rates[targetCurrency];
 }
 
-getExchangeRate();
+function formatRate(baseCurrency, targetCurrency, rate) {
+  return `1 ${baseCurrency} = ${rate.toFixed(2)} ${targetCurrency}`;
+}
 
-// Add Event Listeners
-cur1.addEventListener("change", () => {
+function switchCurrencies() {
+  [fromCurrency.value, toCurrency.value] = [toCurrency.value, fromCurrency.value];
+  switchButton.classList.toggle("rotate");
   getExchangeRate();
-  getFlag();
-});
-cur2.addEventListener("change", () => {
-  getExchangeRate();
-  getFlag();
-});
-cur1Input.addEventListener("input", getExchangeRate);
-cur2Input.addEventListener("input", getExchangeRate);
+  getFlags();
+}
 
-switchCur.addEventListener("click", () => {
-  const cur1Val = cur1.value;
-  cur1.value = cur2.value;
-  cur2.value = cur1Val;
-  switchCur.classList.toggle("rotate");
-  getExchangeRate();
-  getFlag();
-});
+async function getExchangeRate() {
+  const baseCurrency = fromCurrency.value;
+  const targetCurrency = toCurrency.value;
+  const rate = await fetchExchangeRate(baseCurrency, targetCurrency);
+  baseRate.textContent = formatRate(baseCurrency, targetCurrency, rate);
+  toAmount.value = (fromAmount.value * rate).toFixed(2);
+}
 
-// Get Flag
-function getFlag() {
+function getFlags() {
   countries.forEach((country) => {
-    // console.log(country.name);
-    if (cur1.value == country.name) {
-      console.log(country.flagURL);
-      const imgSrc = document.querySelector(".from img");
-      imgSrc.setAttribute("src", country.flagURL);
+    if (fromCurrency.value === country.name) {
+      const fromFlag = document.querySelector(".from img");
+      fromFlag.setAttribute("src", country.flagURL);
     }
-    if (cur2.value == country.name) {
-      console.log(country.flagURL);
-      const imgSrc = document.querySelector(".to img");
-      imgSrc.setAttribute("src", country.flagURL);
+    if (toCurrency.value === country.name) {
+      const toFlag = document.querySelector(".to img");
+      toFlag.setAttribute("src", country.flagURL);
     }
   });
 }
+
+// Add Event Listeners
+fromCurrency.addEventListener("change", () => {
+  getExchangeRate();
+  getFlags();
+});
+toCurrency.addEventListener("change", () => {
+  getExchangeRate();
+  getFlags();
+});
+fromAmount.addEventListener("input", getExchangeRate);
+toAmount.addEventListener("input", getExchangeRate);
+switchButton.addEventListener("click", switchCurrencies);
+
+// Initial setup
+getExchangeRate();
+getFlags();
