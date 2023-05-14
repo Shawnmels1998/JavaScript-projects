@@ -1,56 +1,51 @@
-const timer = document.querySelector(".time");
-const startT = document.querySelector(".start");
-const pauseT = document.querySelector(".pause");
-const resetT = document.querySelector(".reset");
-let [milliseconds, seconds, minutes, hours] = [0, 0, 0, 0];
-let t = null;
+const timerEl = document.querySelector(".time");
+const startBtn = document.querySelector(".start");
+const pauseBtn = document.querySelector(".pause");
+const resetBtn = document.querySelector(".reset");
 
-startT.addEventListener("click", startTimer);
-pauseT.addEventListener("click", pauseTimer);
-resetT.addEventListener("click", resetTimer);
+let [milliseconds, seconds, minutes, hours] = [0, 0, 0, 0];
+let timerId = null;
+
+startBtn.addEventListener("click", startTimer);
+pauseBtn.addEventListener("click", pauseTimer);
+resetBtn.addEventListener("click", resetTimer);
 
 function startTimer() {
-  if (t !== null) {
-    clearInterval(t);
+  if (timerId !== null) {
+    clearInterval(timerId);
   }
-  t = setInterval(displayTime, 10);
+  timerId = setInterval(displayTime, 10);
 }
 
 function pauseTimer() {
-  clearInterval(t);
+  clearInterval(timerId);
 }
 
 function resetTimer() {
-  clearInterval(t);
+  clearInterval(timerId);
   [milliseconds, seconds, minutes, hours] = [0, 0, 0, 0];
-  timer.innerHTML = "00 : 00 : 00 : 000";
+  displayTime();
 }
 
-// Display Timer
 function displayTime() {
   milliseconds += 10;
-  if (milliseconds == 1000) {
+  if (milliseconds === 1000) {
     milliseconds = 0;
     seconds++;
-    if (seconds == 60) {
+    if (seconds === 60) {
       seconds = 0;
       minutes++;
-      if (minutes == 60) {
+      if (minutes === 60) {
         minutes = 0;
         hours++;
       }
     }
   }
 
-  let h = hours < 10 ? "0" + hours : hours;
-  let m = minutes < 10 ? "0" + minutes : minutes;
-  let s = seconds < 10 ? "0" + seconds : seconds;
-  let ms =
-    milliseconds < 10
-      ? "00" + milliseconds
-      : milliseconds < 100
-      ? "0" + milliseconds
-      : milliseconds;
+  const h = hours.toString().padStart(2, "0");
+  const m = minutes.toString().padStart(2, "0");
+  const s = seconds.toString().padStart(2, "0");
+  const ms = milliseconds.toString().padStart(3, "0");
 
-  timer.innerHTML = `${h} : ${m} : ${s} : ${ms}`;
+  timerEl.textContent = `${h} : ${m} : ${s} : ${ms}`;
 }
