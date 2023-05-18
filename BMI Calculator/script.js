@@ -4,45 +4,69 @@
 // Overweight -  25 - 29.9
 // Obese -  30 and above
 
-const btn = document.querySelector(".btn"),
-  result = document.querySelector(".result"),
-  reset = document.querySelector(".reset");
+const btn = document.querySelector(".btn");
+const result = document.querySelector(".result");
+const reset = document.querySelector(".reset");
 
 btn.addEventListener("click", calculateBMI);
 
 function calculateBMI(e) {
   e.preventDefault();
-  let height = document.querySelector(".height").value;
-  let weight = document.querySelector(".weight").value;
+  const heightInput = document.querySelector(".height");
+  const weightInput = document.querySelector(".weight");
+  
+  const height = heightInput.value;
+  const weight = weightInput.value;
 
-  console.log(height);
-
-  // Validate Input
-  if (height === "" || isNaN(height)) {
-    return (result.innerHTML = "Provide a valid Height!");
-  } else if (weight === "" || isNaN(weight)) {
-    return (result.innerHTML = "Provide a valid Height!");
-  } else {
-    height = height / 100;
-    let bmi = (weight / Math.pow(height, 2)).toFixed(2);
-    console.log(bmi);
-    //   Categorize result
-    if (bmi < 18.5) {
-      showResult(`Underweight: <span>${bmi}</span>`, "orange");
-    } else if (bmi >= 18.5 && bmi < 24.9) {
-      showResult(`Normal: <span>${bmi}</span>`, "green");
-    } else if (bmi >= 25.0 && bmi < 29.9) {
-      showResult(`Overweight: <span>${bmi}</span>`, "blue");
-    } else {
-      showResult(`Obese: <span>${bmi}</span>`, "red");
-    }
+  if (!validateInput(height, weight)) {
+    return;
   }
+
+  const bmi = calculateBmiValue(height, weight);
+  categorizeResult(bmi);
+  
   reset.style.display = "block";
 }
 
-function showResult(val, color) {
+function validateInput(height, weight) {
+  if (height === "" || isNaN(height)) {
+    setResult("Provide a valid Height!", "orange");
+    return false;
+  } else if (weight === "" || isNaN(weight)) {
+    setResult("Provide a valid Weight!", "orange");
+    return false;
+  }
+  return true;
+}
+
+function calculateBmiValue(height, weight) {
+  const heightInMeters = height / 100;
+  return (weight / Math.pow(heightInMeters, 2)).toFixed(2);
+}
+
+function categorizeResult(bmi) {
+  let message, color;
+  
+  if (bmi < 18.5) {
+    message = `Underweight: <span>${bmi}</span>`;
+    color = "orange";
+  } else if (bmi < 24.9) {
+    message = `Normal: <span>${bmi}</span>`;
+    color = "green";
+  } else if (bmi < 29.9) {
+    message = `Overweight: <span>${bmi}</span>`;
+    color = "blue";
+  } else {
+    message = `Obese: <span>${bmi}</span>`;
+    color = "red";
+  }
+  
+  setResult(message, color);
+}
+
+function setResult(message, color) {
   result.style.backgroundColor = color;
-  return (result.innerHTML = val);
+  result.innerHTML = message;
 }
 
 reset.addEventListener("click", () => {
@@ -50,3 +74,4 @@ reset.addEventListener("click", () => {
   reset.style.display = "none";
   result.style.display = "none";
 });
+
