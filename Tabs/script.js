@@ -3,20 +3,15 @@ const allContent = document.querySelectorAll(".tab-content");
 
 for (let i = 0; i < tabLinks.length; i++) {
   tabLinks[i].addEventListener("click", function (e) {
-    const current = document.getElementsByClassName("active");
-    current[0].className = current[0].className.replace(" active", "");
-    this.className += " active";
+    const current = document.querySelector(".active");
+    current.classList.remove("active");
+    this.classList.add("active");
 
-    // Switch content
     const filter = e.target.dataset.filter;
     console.log(filter);
 
     allContent.forEach((content) => {
-      if (content.classList.contains(filter)) {
-        content.style.display = "block";
-      } else {
-        content.style.display = "none";
-      }
+      content.style.display = content.classList.contains(filter) ? "block" : "none";
     });
   });
 }
