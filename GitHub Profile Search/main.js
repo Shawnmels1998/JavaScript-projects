@@ -1,10 +1,8 @@
 import * as v from "./js/variables.js";
 import { getUser, errorMessage } from "./js/functions.js";
 
-v.form.addEventListener("submit", (e) => {
+const handleSubmit = (e) => {
   e.preventDefault();
-  //   let user = v.search.value;
-  //   let user = v.search.value.replace(/\s+/g, "");
   let user = v.search.value.split(" ").join("");
 
   if (user === "") {
@@ -14,4 +12,6 @@ v.form.addEventListener("submit", (e) => {
     getUser(user);
     v.search.value = "";
   }
-});
+};
+
+v.form.addEventListener("submit", handleSubmit);
