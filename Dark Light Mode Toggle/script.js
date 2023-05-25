@@ -3,32 +3,19 @@ const toggleText = document.querySelector(".toggle-text");
 
 let darkMode = localStorage.getItem("darkMode");
 
-// Set Dark Mode
-const enableDarkMode = () => {
-  document.body.classList.add("darkmode");
-  toggleText.textContent = "Light";
-  localStorage.setItem("darkMode", "enabled");
+const setDarkMode = (enabled) => {
+  document.body.classList.toggle("darkmode", enabled);
+  toggleText.textContent = enabled ? "Light" : "Dark";
+  localStorage.setItem("darkMode", enabled ? "enabled" : null);
 };
 
-// Disable Dark Mode
-const disableDarkMode = () => {
-  document.body.classList.remove("darkmode");
-  toggleText.textContent = "Dark";
-  localStorage.setItem("darkMode", null);
+const toggleDarkModeHandler = () => {
+  darkMode = localStorage.getItem("darkMode");
+  setDarkMode(darkMode !== "enabled");
 };
 
-// Save DarkMode History
 if (darkMode === "enabled") {
-  enableDarkMode();
+  setDarkMode(true);
 }
 
-// Add Event Listener
-toggleDarkMode.addEventListener("click", () => {
-  let darkMode = localStorage.getItem("darkMode");
-
-  if (darkMode !== "enabled") {
-    enableDarkMode();
-  } else {
-    disableDarkMode();
-  }
-});
+toggleDarkMode.addEventListener("click", toggleDarkModeHandler);
