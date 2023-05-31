@@ -1,11 +1,13 @@
 const imgLarge = document.getElementById("large-img");
-const productImages = document.querySelectorAll(".img-small img");
+const productImages = Array.from(document.querySelectorAll(".img-small img"));
 
 console.log(productImages.length);
 
+function handleImageClick(event) {
+  const src = event.target.getAttribute("src");
+  imgLarge.src = src;
+}
+
 productImages.forEach((image) => {
-  image.addEventListener("click", (e) => {
-    let src = e.target.getAttribute("src");
-    imgLarge.src = src;
-  });
+  image.addEventListener("click", handleImageClick);
 });
