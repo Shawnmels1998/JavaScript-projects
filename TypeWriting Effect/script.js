@@ -9,56 +9,39 @@ const typingDelay = 200;
 const erasingDelay = 100;
 const newWordDelay = 2000;
 
-// Typing Function
 function type() {
   if (letterIndex < wordArray[wordArrayIndex].length) {
-    if (!cursor.classList.contains("typing")) {
-      cursor.classList.add("typing");
-    }
-
-    typedWord.textContent += wordArray[wordArrayIndex].charAt(letterIndex);
+    toggleCursorClass("typing");
+    typedWord.textContent += wordArray[wordArrayIndex][letterIndex];
     letterIndex++;
     setTimeout(type, typingDelay);
   } else {
-    cursor.classList.remove("typing");
+    toggleCursorClass("typing");
     setTimeout(erase, newWordDelay);
   }
 }
 
-// Erase Function
 function erase() {
   if (letterIndex > 0) {
-    if (!cursor.classList.contains("typing")) {
-      cursor.classList.add("typing");
-    }
-    typedWord.textContent = wordArray[wordArrayIndex].substring(
-      0,
-      letterIndex - 1
-    );
+    toggleCursorClass("typing");
+    typedWord.textContent = wordArray[wordArrayIndex].substring(0, letterIndex - 1);
     letterIndex--;
     setTimeout(erase, erasingDelay);
   } else {
-    cursor.classList.remove("typing");
-    wordArrayIndex++;
-    if (wordArrayIndex >= wordArray.length) {
-      wordArrayIndex = 0;
-    }
+    toggleCursorClass("typing");
+    wordArrayIndex = (wordArrayIndex + 1) % wordArray.length;
     setTimeout(type, typingDelay);
+  }
+}
+
+function toggleCursorClass(className) {
+  if (!cursor.classList.contains(className)) {
+    cursor.classList.add(className);
+  } else {
+    cursor.classList.remove(className);
   }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
   setTimeout(type, newWordDelay);
 });
-
-// wordArray.forEach((word, index) => {
-//   console.log(`${index} => ${word}`);
-// });
-
-// const word = "Developer";
-// const result = word.charAt(0);
-// console.log(result);
-
-// const word = "Developer";
-// const result = word.substring(0, 3);
-// console.log(result);
