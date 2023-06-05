@@ -1,18 +1,15 @@
 const menu = document.querySelector(".menu");
 const avatar = document.querySelector(".avatar-profile img");
 
-avatar.addEventListener("mouseover", () => {
+const handleMouseover = () => {
   menu.classList.add("active");
-});
+};
 
-avatar.addEventListener("mouseout", () => {
+const handleMouseout = () => {
   menu.classList.remove("active");
-});
+};
 
-menu.addEventListener("mouseover", () => {
-  menu.classList.add("active");
-});
-
-menu.addEventListener("mouseout", () => {
-  menu.classList.remove("active");
-});
+avatar.addEventListener("mouseover", handleMouseover);
+avatar.addEventListener("mouseout", handleMouseout);
+menu.addEventListener("mouseover", handleMouseover);
+menu.addEventListener("mouseout", handleMouseout);
