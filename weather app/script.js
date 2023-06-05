@@ -1,66 +1,73 @@
 const api = {
-    key: "API KEY",
-    base: "https://api.openweathermap.org/data/2.5/"
-}
+  key: "API KEY",
+  base: "https://api.openweathermap.org/data/2.5/",
+};
 
-const search = document.querySelector(".search");
+const searchInput = document.querySelector(".search");
 const btn = document.querySelector(".btn");
-btn.addEventListener("click", getInput);
+btn.addEventListener("click", fetchData);
 
-function getInput(event) {
-    event.preventDefault();
-
-    if (event.type == "click") {
-       getData(search.value)
-    }
+function fetchData(event) {
+  event.preventDefault();
+  const searchTerm = searchInput.value.trim();
+  if (searchTerm) {
+    getData(searchTerm);
+  }
 }
 
-function getData() {
-    fetch(`${api.base}weather?q=${search.value}&units=metric&appid=${api.key}`)
-      .then(response => {
-          return response.json();
-      }).then(displayData);
+async function getData(searchTerm) {
+  try {
+    const response = await fetch(
+      `${api.base}weather?q=${searchTerm}&units=metric&appid=${api.key}`
+    );
+    const data = await response.json();
+    displayData(data);
+  } catch (error) {
+    displayError("An error occurred while fetching the weather data.");
+  }
 }
 
-function displayData (response) {
-    // console.log(response);
-    if (response.cod === "404") {
-        const error = document.querySelector(".error");
-        error.textContent = "Please enter a valid city";
-        search.value = "";
-    } else {
-        const city = document.querySelector(".city");
-        city.innerText = `${response.name}, ${response.sys.country}`;
+function displayData(response) {
+  const error = document.querySelector(".error");
+  const city = document.querySelector(".city");
+  const date = document.querySelector(".date");
+  const temp = document.querySelector(".temp");
+  const weather = document.querySelector(".weather");
+  const tempRange = document.querySelector(".temp-range");
+  const weatherIcon = document.querySelector(".weather-icon");
 
-        const today = new Date();
-        const date = document.querySelector(".date");
-        date.innerText = dateFunction(today);
+  if (response.cod === "404") {
+    displayError("Please enter a valid city");
+  } else {
+    const { name, sys, main, weather: weatherData } = response;
 
-        const temp = document.querySelector(".temp");
-        temp.innerHTML = `Temp: ${Math.round(response.main.temp)} <span>°C</span>`;
+    error.textContent = "";
+    city.innerText = `${name}, ${sys.country}`;
+    date.innerText = formatDate(new Date());
+    temp.innerHTML = `Temp: ${Math.round(main.temp)} <span>°C</span>`;
+    weather.innerText = `Weather: ${weatherData[0].main}`;
+    tempRange.innerText = `Temp Range: ${Math.round(
+      main.temp_min
+    )}°C / ${Math.round(main.temp_max)}°C`;
+    weatherIcon.src =
+      "http://openweathermap.org/img/w/" + weatherData[0].icon + ".png";
 
-        const weather = document.querySelector(".weather");
-        weather.innerText = `Weather: ${response.weather[0].main}`;
-
-        const tempRange = document.querySelector(".temp-range");
-        tempRange.innerText = `Temp Range: ${Math.round(response.main.temp_min)}°C / ${Math.round(response.main.temp_max)}°C`;
-
-        const weatherIcon = document.querySelector(".weather-icon");
-        const iconURL = "http://openweathermap.org/img/w/";
-        weatherIcon.src = iconURL + response.weather[0].icon + ".png";
-
-        search.value = "";
-    }
+    searchInput.value = "";
+  }
 }
 
-function dateFunction (d) {
-    let months = ["Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+function displayError(errorMessage) {
+  const error = document.querySelector(".error");
+  error.textContent = errorMessage;
+  searchInput.value = "";
+}
 
-    let day = days[d.getDay()];
-    let date = d.getDate();
-    let month = months[d.getMonth()];
-    let year = d.getFullYear();
-
-    return `${day}, ${date} ${month} ${year}`;
+function formatDate(date) {
+  const options = {
+    weekday: "long",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  };
+  return date.toLocaleDateString(undefined, options);
 }
