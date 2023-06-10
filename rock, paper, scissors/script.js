@@ -13,13 +13,17 @@ function computerTurn() {
   return choices[randomIndex];
 }
 
+function updateUI() {
+  playerText.textContent = `Player: ${player}`;
+  computerText.textContent = `Computer: ${computer}`;
+  resultText.textContent = result;
+}
+
 function playRound(playerChoice) {
   player = playerChoice;
   computer = computerTurn();
-  playerText.textContent = `Player: ${player}`;
-  computerText.textContent = `Computer: ${computer}`;
   result = checkWinner();
-  resultText.textContent = result;
+  updateUI();
 }
 
 function checkWinner() {
