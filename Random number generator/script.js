@@ -1,31 +1,15 @@
-const number = document.querySelector('.number');
-const btn = document.querySelector('.generate');
+const elements = {
+  number: document.querySelector('.number'),
+  btn: document.querySelector('.generate')
+};
 
-btn.addEventListener("click", generateNumber);
+elements.btn.addEventListener("click", generateNumber);
 
 function generateNumber() {
-    const randomNumber = Math.floor(Math.random() * 100 + 1);
-    // console.log(randomNumber);
-    number.innerHTML = randomNumber;
+  const randomNumber = getRandomNumber(1, 100);
+  elements.number.innerHTML = randomNumber;
 }
 
-
-// Math.floor(Math.random() * (max - min  + 1)) + min
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const rand = Math.floor(Math.random() * 10 + 1);
-
-// console.log(rand);
+function getRandomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
