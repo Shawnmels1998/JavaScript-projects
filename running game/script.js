@@ -1,5 +1,4 @@
 const hero = document.querySelector(".hero");
-const heroBoy = document.querySelector(".hero-boy");
 const villain = document.querySelector(".villain");
 
 const jump = () => {
@@ -13,19 +12,22 @@ const jump = () => {
   }, 300);
 };
 
-document.addEventListener("keydown", (e) => {
+const handleKeyDown = (e) => {
   if (e.code === "Space") {
     jump();
   }
-});
+};
 
 const isAlive = setInterval(() => {
-  const heroTop = parseInt(window.getComputedStyle(hero).top);
-  const villainLeft = parseInt(window.getComputedStyle(villain).left);
+  const heroTop = parseInt(getComputedStyle(hero).top);
+  const villainLeft = parseInt(getComputedStyle(villain).left);
 
   if (villainLeft < 40 && villainLeft > 20 && heroTop >= 130) {
     villain.style.animation = "none";
     alert("Game over, press spacebar to start");
   }
 }, 10);
+
+document.addEventListener("keydown", handleKeyDown);
+
 
